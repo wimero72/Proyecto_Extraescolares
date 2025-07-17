@@ -1,7 +1,11 @@
 # actividades/admin.py
 from django.contrib import admin
-from .models import Actividad, Alumno, Inscripcion
+from .models import Actividad, Alumno, Inscripcion, Monitor
 
+@admin.register(Monitor)
+class AlumnoAdmin(admin.ModelAdmin):
+    list_display = ('nombre_completo', 'correo', 'especialidad', 'usuario')
+    search_fields = ('nombre_completo', 'correo', 'especialidad')
 @admin.register(Actividad)
 class ActividadAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'monitor', 'plazas_maximas', 'fecha_inicio', 'plazas_restantes')
