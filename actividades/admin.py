@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import Actividad, Alumno, Inscripcion, Monitor
 
 @admin.register(Monitor)
-class AlumnoAdmin(admin.ModelAdmin):
+class MonitorAdmin(admin.ModelAdmin):
     list_display = ('nombre_completo', 'correo', 'especialidad', 'usuario')
     search_fields = ('nombre_completo', 'correo', 'especialidad')
 @admin.register(Actividad)
