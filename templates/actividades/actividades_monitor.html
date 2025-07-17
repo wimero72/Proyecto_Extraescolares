@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Actividades que Dirijo{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Actividades que Diriges ({{ user.username }})</h1>
+
+{% if actividades %}
+    <div class="list-group">
+        {% for actividad in actividades %}
+        <div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1 text-primary">{{ actividad.nombre }}</h5>
+                <small class="text-muted">Plazas restantes: {{ actividad.plazas_restantes }}</small>
+            </div>
+            <p class="mb-1">{{ actividad.descripcion|truncatechars:100 }}</p>
+            <small class="text-muted">Inicio: {{ actividad.fecha_inicio|date:"d M Y" }} | Plazas Máximas: {{ actividad.plazas_maximas }}</small>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        Actualmente no tienes actividades asignadas como monitor.
+    </div>
+{% endif %}
+{% endblock %}
