@@ -7,6 +7,7 @@ class AlumnoAdmin(admin.ModelAdmin):
     list_display = ('nombre_completo', 'correo', 'especialidad', 'usuario')
     search_fields = ('nombre_completo', 'correo', 'especialidad')
 @admin.register(Actividad)
+
 class ActividadAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'monitor', 'plazas_maximas', 'fecha_inicio', 'plazas_restantes')
     search_fields = ('nombre', 'monitor')
