@@ -6,7 +6,7 @@ from django.db.utils import IntegrityError
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Actividad, Alumno, Inscripcion
+from .models import Actividad, Alumno, Inscripcion, Monitor
 from .forms import (
     AlumnoSignUpForm,
     ActividadForm,
@@ -38,7 +38,7 @@ def lista_actividades(request):
     fecha_filter = request.GET.get('fecha')
 
     if monitor_filter:
-        actividades_list = actividades_list.filter(monitor__icontains=monitor_filter)
+        actividades_list = actividades_list.filter(monitor__nombre_completo__icontains=monitor_filter)
     if curso_filter:
         pass
     if fecha_filter:
@@ -64,11 +64,13 @@ def admin_dashboard(request):
     total_actividades = Actividad.objects.count()
     total_alumnos = Alumno.objects.count()
     total_inscripciones = Inscripcion.objects.count()
+    total_Monitores = Monitor.objects.count()
 
     context = {
         'total_actividades': total_actividades,
         'total_alumnos': total_alumnos,
         'total_inscripciones': total_inscripciones,
+        'total_monitores': total_Monitores
     }
     return render(request, 'actividades/admin_dashboard.html', context)
 
@@ -118,7 +120,7 @@ def admin_editar_actividad(request, pk):
             return redirect('admin_lista_actividades')
     else:
         form = ActividadForm(instance=actividad)
-    return render(request, 'actividades/admin_actividad_form.html', {'form': form, 'action': 'Editar'})
+    return render(request, 'actividades/admin_actividad_form.html', {'form': form, 'action': 'Actualizar'})
 
 
 @login_required
@@ -218,11 +220,12 @@ def user_logout(request):
 @login_required
 @user_passes_test(is_monitor, login_url='/login/')
 def actividades_monitor(request):
-    """
-    Muestra las actividades que dirige un monitor logueado.
-    """
-    monitor_name = request.user.username # O un campo específico si lo creas
-    actividades = Actividad.objects.filter(monitor__icontains=monitor_name)
+    try:
+        monitor_actual = request.user.monitor_profile
+        actividades = Actividad.objects.filter(monitor=monitor_actual)
+        
+    except Monitor.DoesNotExist:
+            actividades = [] 
     context = {
         'actividades': actividades
     }
